@@ -7,4 +7,4 @@ Libraries used ( You Must have to install these libraries ):
 
 2. speech_recognition: Speech Recognition is an important feature in several applications used such as home automation, artificial intelligence, etc.This is useful as it can be used on microcontrollers such as Raspberri Pis with the help of an external microphone. 
 
-3. datetime: 
+3. datetime: date and time are not a data type of its own, but a module named datetime can be imported to work with the date as well as time. Datetime module comes built into Python, so there is no need to install it externally.
