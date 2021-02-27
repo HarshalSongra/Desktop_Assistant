@@ -9,6 +9,7 @@ import smtplib
 import json
 import requests
 from send_mail import sendmail
+import time
 
 
 engine = pyttsx3.init('sapi5')
@@ -125,6 +126,26 @@ if __name__ == "__main__":
             except Exception as e:
                 print(e)
                 speak("Sorry Sir there is a problem, i can't send email\n")
+                
+               
+        elif "locate " in command:
+            location = command.split(" ")[-1]
+            url = f"https://www.google.com/maps/place/{location}"
+            speak(f"Searching {location} ..")
+            webbrowser.get().open(url)
+            
+        elif "wait" in command or "stop" in command:
+            speak("Stop listening for how much time sir ?")
+            t = int(input("Time: "))
+            speak(f"Stopping for {t} seconds")
+            time.sleep(t)
+        
+        elif " on youtube" in command:
+            song = command.split("on")[0::-1]
+            url = f"https://www.youtube.com/results?search_query={song}"
+            webbrowser.get().open(url)
+            speak(f"Showing results for {song}")
+        
         elif 'hey dear ' in command:
             speak("Hello Sir")
         
