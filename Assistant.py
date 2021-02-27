@@ -8,6 +8,7 @@ import random
 import smtplib
 import json
 import requests
+from send_mail import sendmail
 
 
 engine = pyttsx3.init('sapi5')
@@ -52,13 +53,7 @@ def takeCommand():
 
         return command.lower()
 
-def sendMail(to, message):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login('harshsongra0806@gmail.com', 'Harsh@0806')
-    server.sendmail('harshsongra0806@gmail.com', to , message)
-    server.close()
+
     
 if __name__ == "__main__":
     greetMe() 
@@ -124,15 +119,22 @@ if __name__ == "__main__":
                 
             speak("sir, All the links are given you can checkout your own ")
 
+        elif "github" in command:
+            speak("Opening Github Sir...")
+            webbrowser.open("https://github.com/HarshalSongra")
+
 
         elif 'send mail' in command:
             try:
-                speak("What should i say sir?")
-                message = takeCommand()
-                to = "harshalsongra08@gmail.com"
-                sendMail(to, message)
-                speak("The Email has been Sent Sir...")
+                print("Email Sender: ")
+                speak("Enter the Email id's sir:")
+                email_id = input("Email id's: ")
 
+                speak("What can i say sir? ")
+                msg = input("Messege: ")
+
+                speak("wait for a minuit sir..")
+                sendmail(to_emails=email_id, text=msg)
             except Exception as e:
                 print(e)
                 speak("Sorry Sir there is a problem, i can't send email\n")
