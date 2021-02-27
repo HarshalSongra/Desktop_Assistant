@@ -108,7 +108,7 @@ if __name__ == "__main__":
             speak("welcome Sir, It's my Work")
 
             
-    # NEWS API Key:- 01922e11ddb44bd2b9bf29caa50abc32
+    # NEWS API Key:- Enter Your News API key Here
         elif 'news' in command:
             r = requests.get('http://newsapi.org/v2/top-headlines?country=in&apiKey=01922e11ddb44bd2b9bf29caa50abc32')
             data = json.loads(r.content)
