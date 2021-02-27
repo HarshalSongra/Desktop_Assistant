@@ -95,20 +95,7 @@ if __name__ == "__main__":
                 
             exit()
         
-        elif 'hey dear ' in command:
-            speak("Hello Sir")
-        
-        elif 'blank_space' in command:
-            speak("Yess sir?")
-        
-        elif 'who are you' in command:
-            speak("I am your assistent Sir...")
-
-        elif 'thanks dear' in command:
-            speak("welcome Sir, It's my Work")
-
-            
-    # NEWS API Key:- Enter Your News API key Here
+        # NEWS API Key:- Enter Your News API key Here
         elif 'news' in command:
             r = requests.get('http://newsapi.org/v2/top-headlines?country=in&apiKey=01922e11ddb44bd2b9bf29caa50abc32')
             data = json.loads(r.content)
@@ -138,6 +125,17 @@ if __name__ == "__main__":
             except Exception as e:
                 print(e)
                 speak("Sorry Sir there is a problem, i can't send email\n")
+        elif 'hey dear ' in command:
+            speak("Hello Sir")
+        
+        elif 'blank_space' in command:
+            speak("Yess sir?")
+        
+        elif 'who are you' in command:
+            speak("I am your assistent Sir...")
+
+        elif 'thanks dear' in command:
+            speak("welcome Sir, It's my Work")
 
         else:
             speak("Sorry sir, i can't getting what you want to say, can you please repeat\n")
