@@ -60,7 +60,7 @@ def takeCommand():
 
         except Exception as e:
             print("Didn't get it, Say that again...")
-            return "None"
+            return "none"
 
         return command.lower()
 
@@ -231,5 +231,6 @@ if __name__ == "__main__":
             speak("Okayyy sir...")
             time.sleep(10)
 
-        else:
-            speak("Sorry sir, i can't getting what you want to say, can you please repeat\n")
+        elif 'none' in command:
+            print("Sorry sir, I am unable to recognize, try to speak clear")
+            speak("Sorry sir, I am unable to recognize, try to speak clear")
