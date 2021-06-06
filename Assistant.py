@@ -5,10 +5,16 @@ import wikipedia
 import webbrowser
 import os
 import random
-import smtplib
 import json
 import requests
 from send_mail import sendmail
+import time
+import subprocess
+
+
+MONTHS = ["january", "february", "march", "april", "may", "june","july", "august", "september","october", "november", "december"]
+DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+DAY_EXTENTIONS = ["rd", "th", "st", "nd"]
 
 
 engine = pyttsx3.init('sapi5')
@@ -32,31 +38,47 @@ def greetMe():
         speak("Good Evening Sir ")
     
 
-    speak(" I am Your Personal Assistent, How can i help you ? ")
+
+
+def run():
+    greetMe()
+    speak("Glad to see you back,")
 
 def takeCommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening.....")
-        r.pause_threshold = 1
+        print("I am Listening.....")
+        r.pause_threshold = 0.7
         audio = r.listen(source)
+        print("Listening over")
 
         try:
             print("Recognizing.....")
-            command = r.recognize_google(audio)
-            print(f"you said:{command}\n")
+            command = r.recognize_google(audio, language="en-IN")
+            print(f"you said: {command}\n")
     
 
         except Exception as e:
-            print("Say that again...")
+            print("Didn't get it, Say that again...")
             return "None"
 
         return command.lower()
 
+def get_date(date):
+    date = date.lower()
+    today = datetime.date.today()
 
-    
+    if date.count('today') > 0:
+        return today
+
+    day = -1
+    day_of_week = -1
+    month = -1
+    year = today.year
+
+
 if __name__ == "__main__":
-    greetMe() 
+    run()
     while True:
         command = takeCommand()
 
@@ -66,7 +88,7 @@ if __name__ == "__main__":
             results = wikipedia.summary(command, sentences=2)
             print(results)
             speak("Sir, According to Wikipedia" + results)
-        
+
         elif 'open youtube' in command:
             speak("Opening Sir... ")
             webbrowser.open("youtube.com")
@@ -76,15 +98,19 @@ if __name__ == "__main__":
             webbrowser.open("google.com")
 
         elif 'play music' in command:
-            music_dir = 'H:\\Multimedia\\songs'
+            music_dir = 'G:\\Multimedia\\songs'
             songs = os.listdir(music_dir)
             randomsong = random.randint(1, 496)
             speak("Playing Sir... ")
             os.startfile(os.path.join(music_dir, songs[randomsong]))
-        
+
         elif 'time' in command:
             curTime = datetime.datetime.now().strftime(" %H : %M : %S ")
             speak(f"Sir, The Current Time is {curTime}")
+            # time.sleep(20)
+
+        elif 'date' in command:
+            get_date()
 
         elif 'goodbye' in command:
             hour = int(datetime.datetime.now().hour)
@@ -92,23 +118,10 @@ if __name__ == "__main__":
                 speak("Bye Sir, Good Night...")
             else:
                 speak("Good Bye Sir, Have a Good Day...")
-                
+
             exit()
-        
-        elif 'hey dear ' in command:
-            speak("Hello Sir")
-        
-        elif 'blank_space' in command:
-            speak("Yess sir?")
-        
-        elif 'who are you' in command:
-            speak("I am your assistent Sir...")
 
-        elif 'thanks dear' in command:
-            speak("welcome Sir, It's my Work")
-
-            
-    # NEWS API Key:- 01922e11ddb44bd2b9bf29caa50abc32
+        # NEWS API Key:- 01922e11ddb44bd2b9bf29caa50abc32
         elif 'news' in command:
             r = requests.get('http://newsapi.org/v2/top-headlines?country=in&apiKey=01922e11ddb44bd2b9bf29caa50abc32')
             data = json.loads(r.content)
@@ -116,13 +129,12 @@ if __name__ == "__main__":
                 print(data['articles'][i]['title'])
                 print(data['articles'][i]['url'])
                 speak(data['articles'][i]['description'])
-                
+
             speak("sir, All the links are given you can checkout your own ")
 
         elif "github" in command:
-            speak("Opening Github Sir...")
+            speak("Opening your Github profile Sir...")
             webbrowser.open("https://github.com/HarshalSongra")
-
 
         elif 'send mail' in command:
             try:
@@ -133,11 +145,91 @@ if __name__ == "__main__":
                 speak("What can i say sir? ")
                 msg = input("Messege: ")
 
-                speak("wait for a minuit sir..")
+                speak("wait for a minute sir..")
                 sendmail(to_emails=email_id, text=msg)
+
+                speak(f"The email to <{email_id}> with message: {msg} has been sent successfully sir.")
+                print(f"The email to <{email_id}> with message: {msg} has been sent successfully sir.")
+
+                time.sleep(10)
             except Exception as e:
                 print(e)
                 speak("Sorry Sir there is a problem, i can't send email\n")
+
+
+        elif "locate " in command:
+            location = command.split("locate ")[1]
+            url = f"https://www.google.com/maps/place/{location}"
+            speak(f"Searching {location} ..")
+            webbrowser.get().open(url)
+            time.sleep(15)
+
+        elif "wait" in command or "stop" in command:
+            speak("Stop listening for how much time sir ?")
+            t = int(input("Time: "))
+            speak(f"Stopped listening for {t} seconds")
+            time.sleep(t)
+
+
+        # command = play Romantic video on youtube.
+        elif " youtube" in command and 'search' not in command:
+            song = command.split("play ")[1]
+            song = song.split(" on")[0]
+            url = f"https://www.youtube.com/results?search_query={song}"
+            webbrowser.get().open(url)
+            speak(f"Showing results for {song}")
+            time.sleep(15)
+
+
+        elif 'search' in command:
+
+            query = command.replace("search", "")
+            webbrowser.open(query)
+            time.sleep(20)
+
+        elif "restart" in command:
+            subprocess.call(["shutdown", "/r"])
+
+        elif "hibernate" in command or "sleep" in command:
+            speak("Hibernating")
+            subprocess.call("shutdown / h")
+
+        elif "shut down" in command:
+            speak("Make sure all the application are closed before sign-out")
+            time.sleep(10)
+            subprocess.call(["shutdown", "/l"])
+
+        # Random commands
+        elif "Good Morning" in command:
+            speak("A warm" + command)
+            speak("How are you Mister")
+
+        elif 'hey dear ' in command:
+            speak("Hello Sir")
+
+        elif "i love you" in command:
+            speak("Stay in your limits...")
+
+        elif 'alexa' in command:
+            greetMe()
+            speak("Yes sir, what can i do?")
+
+        elif 'how are you' in command:
+            speak("I am fine, Thank you")
+            speak("How are you, Sir")
+
+        elif 'fine' in command or "good" in command:
+            speak("It's good to know that your fine")
+
+        elif 'who are you' in command:
+            speak("I am your assistent Sir...")
+
+        elif 'thanks dear' in command:
+            speak("welcome Sir, It's my Work")
+
+        elif "shut up" in command:
+            speak("Okayyy sir...")
+            time.sleep(10)
 
         else:
             speak("Sorry sir, i can't getting what you want to say, can you please repeat\n")
