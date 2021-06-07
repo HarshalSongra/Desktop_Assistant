@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
         # NEWS API Key:- 01922e11ddb44bd2b9bf29caa50abc32
         elif 'news' in command:
-            r = requests.get('http://newsapi.org/v2/top-headlines?country=in&apiKey=01922e11ddb44bd2b9bf29caa50abc32')
+            r = requests.get('http://newsapi.org/v2/top-headlines?country=in&apiKey={API key}')
             data = json.loads(r.content)
             for i in range(3):
                 print(data['articles'][i]['title'])
