@@ -3,7 +3,7 @@ import requests
 class WeatherService(object):
     API_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&APPID={}&units=metric";
 
-    API_KEY = "c71eeb32d829e370521a138a908dd48a"
+    API_KEY = "{API Key}"
 
     def __init__(self):
         pass
