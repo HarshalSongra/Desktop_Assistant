@@ -10,6 +10,7 @@ import requests
 from send_mail import sendmail
 import time
 import subprocess
+from weatherModule import WeatherService
 
 
 MONTHS = ["january", "february", "march", "april", "may", "june","july", "august", "september","october", "november", "december"]
@@ -27,22 +28,22 @@ def speak(audio):
     engine.say(audio)  
     engine.runAndWait()
 
+
 def greetMe():
     hour = int(datetime.datetime.now().hour)
 
-    if hour>=0 and hour<12:
+    if hour >= 0 and hour < 12:
         speak("Good Morning Sir")
-    elif hour>=12 and hour<18:
+    elif hour >= 12 and hour < 18:
         speak("Good Afternoon Sir")
     else:
         speak("Good Evening Sir ")
-    
-
 
 
 def run():
     greetMe()
     speak("Glad to see you back,")
+
 
 def takeCommand():
     r = sr.Recognizer()
@@ -156,13 +157,34 @@ if __name__ == "__main__":
                 print(e)
                 speak("Sorry Sir there is a problem, i can't send email\n")
 
+        # Weather
+        elif "weather" in command:
+            speak("Enter the City name ")
+            print("City name : ")
+            city_name = takeCommand()
+            if city_name == 'none':
+                speak("City doesnt recognized")
+                continue
 
+            wm = WeatherService()
+            result = wm.get_weather_data(city_name)
+
+            if result == 'none':
+                print("There is a problem, i cant tell the information")
+                speak("There is a problem, i cant tell the information")
+            else:
+                print(result)
+                speak(result)
+
+
+
+        # Find location
         elif "locate " in command:
             location = command.split("locate ")[1]
             url = f"https://www.google.com/maps/place/{location}"
             speak(f"Searching {location} ..")
             webbrowser.get().open(url)
-            time.sleep(15)
+            time.sleep(8)
 
         elif "wait" in command or "stop" in command:
             speak("Stop listening for how much time sir ?")
@@ -178,14 +200,14 @@ if __name__ == "__main__":
             url = f"https://www.youtube.com/results?search_query={song}"
             webbrowser.get().open(url)
             speak(f"Showing results for {song}")
-            time.sleep(15)
+            time.sleep(8)
 
 
         elif 'search' in command:
 
             query = command.replace("search", "")
             webbrowser.open(query)
-            time.sleep(20)
+            time.sleep(15)
 
         elif "restart" in command:
             subprocess.call(["shutdown", "/r"])
@@ -222,13 +244,13 @@ if __name__ == "__main__":
             speak("It's good to know that your fine")
 
         elif 'who are you' in command:
-            speak("I am your assistent Sir...")
+            speak("I am your assistant Sir...")
 
         elif 'thanks dear' in command:
             speak("welcome Sir, It's my Work")
 
         elif "shut up" in command:
-            speak("Okayyy sir...")
+            speak("okayyy sir...")
             time.sleep(10)
 
         elif 'none' in command:
